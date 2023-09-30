@@ -1,8 +1,33 @@
-def prepare_payload(prompt: str) -> dict:
+import json
+
+
+def get_prompts(path: str) -> list[str]:
+    """Reads the available prompts from the target .json file.
+
+    Args:
+        path (str): path to the .json file.
+
+    Returns:
+        list[str]: list of prompts from the .json file.
+    """
+    try:
+        with open(path, "r") as file:
+            arr = json.load(file)
+
+        return arr
+
+    except FileNotFoundError:
+        print(f"The file '{path}' was not found.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+
+def prepare_payload(prompt: str, amount: int = 1, h: int = 512, w: int = 512, upscale: float = 2) -> dict:
     """Create a payload for the stable diffusion API.
 
     Args:
         prompt (str): prompt for the image generation.
+        amount (int): amount of images to generate.
 
     Returns:
         dict: payload dictionary.
@@ -21,25 +46,25 @@ def prepare_payload(prompt: str) -> dict:
         "do_not_save_grid": False,
         "do_not_save_samples": False,
         "enable_hr": False,
-        "height": 512,
+        "height": h,
         "hr_negative_prompt": "",
         "hr_prompt": "",
         "hr_resize_x": 0,
         "hr_resize_y": 0,
-        "hr_scale": 2,
-        "hr_second_pass_steps": 5,
+        "hr_scale": upscale,
+        "hr_second_pass_steps": 10,
         "hr_upscaler": "Latent",
-        "n_iter": 1,
+        "n_iter": amount,
         "negative_prompt": "",
         "override_settings": {},
         "override_settings_restore_afterwards": True,
         "prompt": prompt,
         "restore_faces": False,
-        "s_churn": 0,
-        "s_min_uncond": 0,
-        "s_noise": 1,
+        "s_churn": 0.0,
+        "s_min_uncond": 0.0,
+        "s_noise": 1.0,
         "s_tmax": None,
-        "s_tmin": 0,
+        "s_tmin": 0.0,
         "sampler_name": "DPM++ 2M Karras",
         "script_args": [],
         "script_name": None,
@@ -52,7 +77,7 @@ def prepare_payload(prompt: str) -> dict:
         "subseed": -1,
         "subseed_strength": 0,
         "tiling": False,
-        "width": 512,
+        "width": w,
     }
 
     return payload
