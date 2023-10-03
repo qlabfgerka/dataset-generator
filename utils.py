@@ -1,4 +1,46 @@
 import json
+import random
+
+
+def generate_cat_prompts(amount: int) -> list[str]:
+    """Generates a specified amount of cat prompts in the format: "realistic photo [view] of [mood] [breed] cat [body part] [activity] [position]".
+
+    Args:
+        amount (int): desired amount of cat prompts.
+
+    Returns:
+        list[str]: list of cat prompts.
+    """
+    prompts = []
+
+    for _ in range(amount):
+        prompt = generate_cat_prompt()
+        prompts.append(prompt)
+
+    return prompts
+
+
+def generate_cat_prompt() -> str:
+    """Returns a random cat prompt in the format: "realistic photo [view] of [mood] [breed] cat [body part] [activity] [position]".
+
+    Returns:
+        str: random cat prompt.
+    """
+    activities_path = "prompts/cats/activities.json"
+    breeds_path = "prompts/cats/breeds.json"
+    moods_path = "prompts/cats/moods.json"
+    parts_path = "prompts/cats/parts.json"
+    positions_path = "prompts/cats/positions.json"
+    views_path = "prompts/cats/views.json"
+
+    activities = get_prompts(activities_path)
+    breeds = get_prompts(breeds_path)
+    moods = get_prompts(moods_path)
+    parts = get_prompts(parts_path)
+    positions = get_prompts(positions_path)
+    views = get_prompts(views_path)
+
+    return f"realistic photo {random.choice(views)} of {random.choice(moods)} {random.choice(breeds)} cat {random.choice(parts)} {random.choice(activities)} {random.choice(positions)}"
 
 
 def get_prompts(path: str) -> list[str]:
